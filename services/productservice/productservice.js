@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const db = require('./config/database.ts');
 
 const port = 9001;
 const serviceName = 'Product Service';
@@ -10,7 +11,7 @@ app.use(bodyParser.json());
 
 app.use('/status', require('./routes/status'));
 
-
+db.connectToDatabase();
 
 
 app.listen(port, (err) => {

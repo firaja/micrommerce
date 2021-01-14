@@ -1,0 +1,44 @@
+version: '3.3'  
+
+services:
+
+  product-service-db:
+    image: mongo:4.4.2-bionic
+    container_name: product-service-db
+    environment:
+      MONGO_INITDB_DATABASE: products
+      MONGO_INITDB_ROOT_USERNAME: product-service-user
+      MONGO_INITDB_ROOT_PASSWORD: product-service-password
+    ports:
+    - "27017-27019:27017-27019"
+    volumes:
+      - ./db/data:/data/db
+    networks:
+      product-service-db-net:
+        aliases:
+          - product-service-db
+
+
+
+  product-service:
+    container_name: product-service
+    restart: always
+    build: .
+    environment:
+      DB_NAME: products
+      DB_USERNAME: product-service-user
+      DB_PASSWORD: product-service-password
+      DB_HOST: product-service-db
+    ports:
+      - "9001:9001"
+    expose:
+      - "9001"
+    networks:
+      - product-service-db-net
+    depends_on:
+      - product-service-db
+
+
+
+networks:
+  product-service-db-net:
